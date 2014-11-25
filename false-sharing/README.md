@@ -1,3 +1,4 @@
+````
 # VM invoker: /opt/jdk1.8.0/jre/bin/java
 # VM options: -Dfile.encoding=UTF-8
 # Warmup: 10 iterations, 1 s each
@@ -159,3 +160,4 @@ c.g.a.b.FalseSharingBenchmark.contended:write       thrpt       10  201.823 ± 3
 c.g.a.b.FalseSharingBenchmark.falseSharing          thrpt       10  231.277 ± 31.062  ops/us
 c.g.a.b.FalseSharingBenchmark.falseSharing:read     thrpt       10   19.164 ±  5.159  ops/us
 c.g.a.b.FalseSharingBenchmark.falseSharing:write    thrpt       10  212.113 ± 35.294  ops/us
+````
