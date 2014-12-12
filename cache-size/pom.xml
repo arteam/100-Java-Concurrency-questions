@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.github.arteam</groupId>
-    <artifactId>l1-cache-size</artifactId>
+    <artifactId>cache-size</artifactId>
     <version>1.0</version>
 
     <build>
