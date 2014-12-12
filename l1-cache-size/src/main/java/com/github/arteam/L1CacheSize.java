@@ -11,23 +11,20 @@ import java.io.*;
 public class L1CacheSize {
 
     public static void main(String[] args) throws Exception {
-        new L1CacheSize().getL1CacheLineSize();
+        new L1CacheSize().getL1CacheSize();
     }
 
-    public void getL1CacheLineSize() {
-        boolean found = false;
+    public void getL1CacheSize() {
+        // Walk through data and instructions caches
         for (int i = 0; i <= 1; i++) {
             String cacheInfoBasePath = "/sys/devices/system/cpu/cpu0/cache/index" + i;
             if (isDataL1Cache(cacheInfoBasePath)) {
-                System.out.printf("L0 cache line size: %d bytes", getLineSize(cacheInfoBasePath));
-                found = true;
-                break;
+                System.out.printf("L1 cache size: %s bytes", getCacheSize(cacheInfoBasePath));
+                return;
             }
         }
 
-        if (!found) {
-            throw new IllegalStateException("Unable find L1 cache info");
-        }
+        throw new IllegalStateException("Unable find L1 cache info");
     }
 
     private boolean isDataL1Cache(String cacheInfoBasePath) {
@@ -42,10 +39,10 @@ public class L1CacheSize {
         }
     }
 
-    private int getLineSize(String cacheInfoBasePath) {
-        File lineSize = new File(cacheInfoBasePath + "/coherency_line_size");
-        try (BufferedReader reader = new BufferedReader(new FileReader(lineSize))) {
-            return Integer.parseInt(reader.readLine());
+    private String getCacheSize(String cacheInfoBasePath) {
+        File size = new File(cacheInfoBasePath + "/size");
+        try (BufferedReader reader = new BufferedReader(new FileReader(size))) {
+            return reader.readLine();
         } catch (IOException e) {
             throw new IllegalStateException(e);
         }
