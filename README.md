@@ -181,4 +181,12 @@ c.g.a.b.FalseSharingBenchmark.falseSharing:read   thrpt   10   19.164 ±  5.159 
 
 **Напишите программу, которая демонстрирует размер кэша L1**
 
-См. [l1-cache-size](https://github.com/arteam/100-Java-Concurrency-questions/tree/master/l1-cache-size)
+См. [l1-cache-size](https://github.com/arteam/100-Java-Concurrency-questions/blob/master/cache-size/src/main/java/com/github/arteam/L1CacheSize.java)
+
+К сожалению, получить размер кэша опытным путём не получилось...
+
+**Напишите программу, которая демонстрирует размер кэша L2**
+
+См. [l2-cache-size](https://github.com/arteam/100-Java-Concurrency-questions/blob/master/cache-size/src/main/java/com/github/arteam/L2CacheSize.java)
+
+Опять же, опытным путём найти значение не получилось.
