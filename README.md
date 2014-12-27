@@ -348,3 +348,67 @@ Happens-before создают `Thread.start()`, `Thread.join()` и `Thread.isAli
 
 * `Thread.sleep` переводит поток в состояние `TIMED_WAITING` и блокирует его до окончания времени сна.
 * `Thread.yeild` всего лишь является подсказкой планировщику о том, что у потока можно забрать квант времени. Поток при этом остается в состоянии `RUNNABLE`. Реализации JVM вольны игнорировать вызовы `Thread.yeild()` и практическая ценность этого метода довольно сомнительна.
+
+**В чем проблема с Double Checked Locking? Как все-таки сделать потокозащищенный ленивый синглетон с дешевым доступом?**
+
+Проблема в DCL в том, что это небезопасная идиома. Изначально придуманная как оптимизация производительности она ведет к тому, что синглтон в реальности не будет синглтоном.
+
+Например, простой синглтон:
+````java
+public class Singleton {
+
+    private static Singleton instance;
+
+    private String state;
+
+    private Singleton(String state) {
+        this.state = state;
+    }
+
+    public String getState(){
+        return state;
+    }
+
+    public static Singleton getInstance() {
+        if (instance == null) {
+            synchronized (this) {
+                if (instance == null) {
+                    instance = new Singleton("I am the single one!");
+                }
+            }
+        }
+        return instance;
+    }
+}
+````
+
+В этом коде есть несколько проблем:
+ 
+* Так как доступ к *instance* не синхронизирован, то никто не гарантирует безопасную публикацию этого поля. Оно публикуется через гонку. Поток, который увидит, что `instance!=null` может увидеть это поле не полностью сконструированным(например, *state* может быть *null*).
+* Чтения *instance* происходят через гонку. Тот факт, что условие `instance==null` сработало не значит, чтение переменной в блоке return вернет это же значение. Там вполне может быть *null*.
+
+Можно воспользоваться holder-идиомой. Она работает за счет того, что класс Holder лениво грузится и инициализуруется загрузчиком классов.
+Дальше доступ идет через synchronized, но так критическая секция очень короткая, JVM довольно хорошо оптимизирует такие операции.
+
+````java
+public class Singleton {
+
+    private static class Holder {
+        private static final Singleton INSTANCE = new Singleton("I am the single one!");
+    }
+
+    private String state;
+
+    private Singleton(String state) {
+        this.state = state;
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public static Singleton getInstance() {
+        return Holder.INSTANCE;
+    }
+}
+````
