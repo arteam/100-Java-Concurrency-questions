@@ -449,3 +449,8 @@ Safe Publishing - безопасная публикация. Это значит
 **Реализуйте ограниченную блокирующую очередь на synchronized/Object.wait()/.notify()/.notifyAll()**
 
 См. [bounded-blockinq-queue](https://github.com/arteam/100-Java-Concurrency-questions/blob/master/bounded-blockinq-queue/src/main/java/com/github/arteam/bbqueue/BoundedBlockingQueue.java)
+
+**Перечислите все сценарии попадания в blocking-set встроенного монитора**
+
+* Поток пытается захватить монитор, но другой монитор уже его держит
+* Поток спит на мониторе и пробуждается вызовом `notify()` или `notifyAll()`, но пока он просыпался, другой поток захватил монитор.
