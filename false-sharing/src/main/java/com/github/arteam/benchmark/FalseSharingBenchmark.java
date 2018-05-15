@@ -10,12 +10,6 @@ import org.openjdk.jmh.runner.options.OptionsBuilder;
 
 import java.util.concurrent.TimeUnit;
 
-/**
- * Date: 11/21/14
- * Time: 11:47 PM
- *
- * @author Artem Prigoda
- */
 public class FalseSharingBenchmark {
 
     @State(Scope.Group)

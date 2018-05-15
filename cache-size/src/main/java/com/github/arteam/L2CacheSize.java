@@ -5,12 +5,6 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 
-/**
- * Date: 12/12/14
- * Time: 10:59 PM
- *
- * @author Artem Prigoda
- */
 public class L2CacheSize {
 
     public static void main(String[] args) throws Exception {

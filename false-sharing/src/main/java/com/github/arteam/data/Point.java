@@ -1,11 +1,5 @@
 package com.github.arteam.data;
 
-/**
- * Date: 11/21/14
- * Time: 11:45 PM
- *
- * @author Artem Prigoda
- */
 public class Point {
 
     private long x;

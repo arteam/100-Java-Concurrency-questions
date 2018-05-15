@@ -7,12 +7,6 @@ import java.util.Iterator;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.TimeUnit;
 
-/**
- * Date: 1/1/15
- * Time: 5:45 PM
- *
- * @author Artem Prigoda
- */
 public class BoundedBlockingQueue<T> implements BlockingQueue<T> {
 
     private final ArrayDeque<T> deque;

@@ -2,12 +2,6 @@ package com.github.arteam;
 
 import java.io.*;
 
-/**
- * Date: 11/26/14
- * Time: 1:03 AM
- *
- * @author Artem Prigoda
- */
 public class L1CacheSize {
 
     public static void main(String[] args) throws Exception {

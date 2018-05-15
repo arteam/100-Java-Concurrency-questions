@@ -10,13 +10,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
-/**
- * Date: 1/1/15
- * Time: 8:33 PM
- * Basic sanity tests
- *
- * @author Artem Prigoda
- */
 public class BoundedBlockingQueueSize {
 
     final BlockingQueue<Long> queue = new BoundedBlockingQueue<Long>(10);
