@@ -8,20 +8,33 @@ import java.util.concurrent.Future;
 import java.util.concurrent.FutureTask;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.RunnableFuture;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.LockSupport;
 
 public class PoorManThreadExecutor {
 
-    private List<Thread> threads;
-    private BlockingQueue<Runnable> tasks = new LinkedBlockingQueue<>();
-    private boolean isShutdown = false;
+    private final List<Thread> threads;
+    private final BlockingQueue<Runnable> tasks = new LinkedBlockingQueue<>();
+    private volatile boolean isShutdown = false;
 
     public PoorManThreadExecutor(int amountThreads) {
         threads = new ArrayList<>(amountThreads);
         for (int i = 0; i < amountThreads; i++) {
             Thread thread = new Thread(() -> {
                 while (!Thread.currentThread().isInterrupted()) {
+                    Runnable task = tasks.poll();
+                    if (task == null) {
+                        if (isShutdown) {
+                            break;
+                        }
+                        try {
+                            task = tasks.take();
+                        } catch (InterruptedException e) {
+                            break;
+                        }
+                    }
                     try {
-                        tasks.poll().run();
+                        task.run();
                     } catch (Exception ignore) {
                     }
                 }
@@ -57,15 +70,29 @@ public class PoorManThreadExecutor {
         isShutdown = true;
     }
 
-    public List<Runnable> shutdownNow() {
+    public void shutdownNow() {
         isShutdown = true;
         for (Thread thread : threads) {
             thread.interrupt();
         }
-        return new ArrayList<>(tasks);
+    }
+
+    public boolean isShutdown() {
+        return isShutdown;
     }
 
     public boolean isTerminated() {
         return threads.stream().allMatch(t -> t.getState() == Thread.State.TERMINATED);
+    }
+
+    public boolean awaitTermination(long timeout, TimeUnit unit) throws InterruptedException {
+        long deadline = System.currentTimeMillis() + unit.toMillis(timeout);
+        while (System.currentTimeMillis() < deadline) {
+            if (isTerminated()) {
+                return true;
+            }
+            LockSupport.parkNanos(TimeUnit.MILLISECONDS.toNanos(100));
+        }
+        return isTerminated();
     }
 }
